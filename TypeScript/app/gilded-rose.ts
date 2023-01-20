@@ -16,7 +16,8 @@ const MIN_QUALITY = 0;
 enum SPECIAL_PRODUCTS {
   agedBrie = 'Aged Brie',
   backstagePasses = 'Backstage passes to a TAFKAL80ETC concert',
-  sulfuras = 'Sulfuras, Hand of Ragnaros'
+  sulfuras = 'Sulfuras, Hand of Ragnaros',
+  conjured = 'Conjured'
 }
 
 export class GildedRose {
@@ -52,29 +53,32 @@ export class GildedRose {
     for (let i = 0; i < this.items.length; i++) {
       const currentItem = this.items[i];
 
-      let qualityUpdate: number;
-      let sellInUpdate = -1;
+      let qualityUpdateValue: number;
+      let sellInUpdateValue = -1;
 
       switch (currentItem.name) {
         case (SPECIAL_PRODUCTS.agedBrie):
-          qualityUpdate = this.isSellDatePassed(currentItem) ? 2 : 1;
+          qualityUpdateValue = this.isSellDatePassed(currentItem) ? 2 : 1;
           break;
         case (SPECIAL_PRODUCTS.backstagePasses):
-          qualityUpdate = this.isSellDatePassed(currentItem) && -currentItem.quality ||
+          qualityUpdateValue = this.isSellDatePassed(currentItem) && -currentItem.quality ||
                           currentItem.sellIn < 6 && 3 ||
                           currentItem.sellIn < 11 && 2 ||
                           1
           break;
         case (SPECIAL_PRODUCTS.sulfuras):
-          qualityUpdate = 0;
-          sellInUpdate = 0;
+          qualityUpdateValue = 0;
+          sellInUpdateValue = 0;
+          break;
+        case (SPECIAL_PRODUCTS.conjured):
+          qualityUpdateValue = this.isSellDatePassed(currentItem) ? -4 : -2;
           break;
         default:
-          qualityUpdate = this.isSellDatePassed(currentItem) ? -2 : -1;
+          qualityUpdateValue = this.isSellDatePassed(currentItem) ? -2 : -1;
       }
 
-      this.setItemQuality(currentItem, qualityUpdate);
-      this.setItemSellIn(currentItem, sellInUpdate);
+      this.setItemQuality(currentItem, qualityUpdateValue);
+      this.setItemSellIn(currentItem, sellInUpdateValue);
     }
 
     return this.items;

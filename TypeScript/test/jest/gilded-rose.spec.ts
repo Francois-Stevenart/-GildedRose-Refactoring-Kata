@@ -5,10 +5,10 @@ function range(n) {
 }
 
 describe('Gilded Rose system for standard products', () => {
-  let gildedRose
+  let gildedRose;
 
   beforeEach(() => {
-    const standardItem = new Item('Sausages', 5, 12)
+    const standardItem = new Item('Sausages', 5, 12);
     gildedRose = new GildedRose([standardItem]);
   })
 
@@ -36,7 +36,7 @@ describe('Gilded Rose system for standard products', () => {
     expect(updatedStandardItem.sellIn).toBe(-1);
     expect(updatedStandardItem.quality).toBe(5);
 
-    gildedRose.updateQuality()
+    gildedRose.updateQuality();
     updatedStandardItem = gildedRose.items[0];
 
     expect(updatedStandardItem.sellIn).toBe(-2);
@@ -48,7 +48,7 @@ describe('Gilded Rose system for standard products', () => {
     const updatedStandardItem = gildedRose.items[0];
 
     expect(updatedStandardItem.sellIn).toBe(-5);
-    expect(updatedStandardItem.quality).toBe(0)
+    expect(updatedStandardItem.quality).toBe(0);
   })
 
   it('should not increase a Quality value above 50 for products whose quality increase with time', () => {
@@ -56,7 +56,7 @@ describe('Gilded Rose system for standard products', () => {
     const gildedRose = new GildedRose(productsIncreasingInQuality);
     range(45).forEach(day => gildedRose.updateQuality());
 
-    gildedRose.items.every(item => expect(item.quality).toBe(50))
+    gildedRose.items.every(item => expect(item.quality).toBe(50));
   })
 });
 
@@ -66,13 +66,13 @@ describe('Gilded Rose system for non-standard products', () => {
     const gildedRose = new GildedRose([agedBrie]);
     range(3).forEach(day => gildedRose.updateQuality());
 
-    expect(gildedRose.items[0].sellIn).toBe(2)
-    expect(gildedRose.items[0].quality).toBe(13)
+    expect(gildedRose.items[0].sellIn).toBe(2);
+    expect(gildedRose.items[0].quality).toBe(13);
 
     range(3).forEach(day => gildedRose.updateQuality());
 
-    expect(gildedRose.items[0].sellIn).toBe(-1)
-    expect(gildedRose.items[0].quality).toBe(17)
+    expect(gildedRose.items[0].sellIn).toBe(-1);
+    expect(gildedRose.items[0].quality).toBe(17);
   })
 
   it('should never alter the Quality and SellIn values of "Sulfaras" as it is a legendary item', () => {
@@ -80,8 +80,8 @@ describe('Gilded Rose system for non-standard products', () => {
     const gildedRose = new GildedRose([sulfuras]);
     range(3).forEach(day => gildedRose.updateQuality());
 
-    expect(gildedRose.items[0].sellIn).toBe(0)
-    expect(gildedRose.items[0].quality).toBe(80)
+    expect(gildedRose.items[0].sellIn).toBe(0);
+    expect(gildedRose.items[0].quality).toBe(80);
   })
 
   it('should increase the Quality value of "Backstage passes" the older it gets, by 2 when 10 days or less left, by 3 when 5 days or less left, and drops it at 0 after concert', () => {
@@ -90,24 +90,49 @@ describe('Gilded Rose system for non-standard products', () => {
 
     range(3).forEach(day => gildedRose.updateQuality());
 
-    expect(gildedRose.items[0].sellIn).toBe(12)
-    expect(gildedRose.items[0].quality).toBe(23)
+    expect(gildedRose.items[0].sellIn).toBe(12);
+    expect(gildedRose.items[0].quality).toBe(23);
 
     range(2).forEach(day => gildedRose.updateQuality());
 
-    expect(gildedRose.items[0].sellIn).toBe(10)
-    expect(gildedRose.items[0].quality).toBe(25)
+    expect(gildedRose.items[0].sellIn).toBe(10);
+    expect(gildedRose.items[0].quality).toBe(25);
 
     range(5).forEach(day => gildedRose.updateQuality());
-    expect(gildedRose.items[0].sellIn).toBe(5)
-    expect(gildedRose.items[0].quality).toBe(35)
+    expect(gildedRose.items[0].sellIn).toBe(5);
+    expect(gildedRose.items[0].quality).toBe(35);
 
     range(5).forEach(day => gildedRose.updateQuality());
-    expect(gildedRose.items[0].sellIn).toBe(0)
-    expect(gildedRose.items[0].quality).toBe(50)
+    expect(gildedRose.items[0].sellIn).toBe(0);
+    expect(gildedRose.items[0].quality).toBe(50);
+
+    gildedRose.updateQuality();
+    expect(gildedRose.items[0].sellIn).toBe(-1);
+    expect(gildedRose.items[0].quality).toBe(0);
+  })
+
+  it('should decrease the Quality value of "Conjured" products twice as fast as normal products', () => {
+    const conjured = new Item('Conjured', 3, 12);
+    const gildedRose = new GildedRose([conjured]);
 
     gildedRose.updateQuality()
-    expect(gildedRose.items[0].sellIn).toBe(-1)
-    expect(gildedRose.items[0].quality).toBe(0)
+
+    expect(gildedRose.items[0].sellIn).toBe(2);
+    expect(gildedRose.items[0].quality).toBe(10);
+
+    range(2).forEach(day => gildedRose.updateQuality());
+
+    expect(gildedRose.items[0].sellIn).toBe(0);
+    expect(gildedRose.items[0].quality).toBe(6);
+
+    gildedRose.updateQuality();
+
+    expect(gildedRose.items[0].sellIn).toBe(-1);
+    expect(gildedRose.items[0].quality).toBe(2);
+
+    gildedRose.updateQuality();
+
+    expect(gildedRose.items[0].sellIn).toBe(-2);
+    expect(gildedRose.items[0].quality).toBe(0);
   })
 })
