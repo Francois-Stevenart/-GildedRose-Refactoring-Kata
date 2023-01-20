@@ -12,13 +12,11 @@ export class Item {
 
 export class GildedRose {
   items: Array<Item>;
-  specialProducts: string[];
   maxQuality: number;
   minQuality: number;
 
   constructor(items = [] as Array<Item>) {
     this.items = items;
-    this.specialProducts = ['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros'];
     this.maxQuality = 50;
     this.minQuality = 0;
   }
@@ -37,6 +35,10 @@ export class GildedRose {
     item.sellIn = item.sellIn + amount;
   }
 
+  private isSellDatePassed(item: Item) {
+    return item.sellIn <= 0;
+  }
+
   updateQuality() {
     for (let i = 0; i < this.items.length; i++) {
       const currentItem = this.items[i];
@@ -46,10 +48,10 @@ export class GildedRose {
 
       switch (currentItem.name) {
         case ('Aged Brie'):
-          qualityUpdate = currentItem.sellIn <= 0 ? 2 : 1;
+          qualityUpdate = this.isSellDatePassed(currentItem) ? 2 : 1;
           break;
         case ('Backstage passes to a TAFKAL80ETC concert'):
-          if (currentItem.sellIn <= 0) {
+          if (this.isSellDatePassed(currentItem)) {
             qualityUpdate = -currentItem.quality
           } else {
             qualityUpdate = currentItem.sellIn < 6 && 3 || currentItem.sellIn < 11 && 2 || 1
@@ -60,7 +62,7 @@ export class GildedRose {
           sellInUpdate = 0;
           break;
         default:
-          qualityUpdate = currentItem.sellIn <= 0 ? -2 : -1;
+          qualityUpdate = this.isSellDatePassed(currentItem) ? -2 : -1;
       }
 
       this.setItemQuality(currentItem, qualityUpdate);
