@@ -10,6 +10,15 @@ export class Item {
   }
 }
 
+const MAX_QUALITY = 50;
+const MIN_QUALITY = 0;
+
+enum SPECIAL_PRODUCTS {
+  agedBrie = 'Aged Brie',
+  backstagePasses = 'Backstage passes to a TAFKAL80ETC concert',
+  sulfuras = 'Sulfuras, Hand of Ragnaros'
+}
+
 export class GildedRose {
   items: Array<Item>;
   maxQuality: number;
@@ -17,8 +26,8 @@ export class GildedRose {
 
   constructor(items = [] as Array<Item>) {
     this.items = items;
-    this.maxQuality = 50;
-    this.minQuality = 0;
+    this.maxQuality = MAX_QUALITY;
+    this.minQuality = MIN_QUALITY;
   }
 
   private setItemQuality(item: Item, amount: number) {
@@ -43,21 +52,20 @@ export class GildedRose {
     for (let i = 0; i < this.items.length; i++) {
       const currentItem = this.items[i];
 
-      let qualityUpdate: number
+      let qualityUpdate: number;
       let sellInUpdate = -1;
 
       switch (currentItem.name) {
-        case ('Aged Brie'):
+        case (SPECIAL_PRODUCTS.agedBrie):
           qualityUpdate = this.isSellDatePassed(currentItem) ? 2 : 1;
           break;
-        case ('Backstage passes to a TAFKAL80ETC concert'):
-          if (this.isSellDatePassed(currentItem)) {
-            qualityUpdate = -currentItem.quality
-          } else {
-            qualityUpdate = currentItem.sellIn < 6 && 3 || currentItem.sellIn < 11 && 2 || 1
-          }
+        case (SPECIAL_PRODUCTS.backstagePasses):
+          qualityUpdate = this.isSellDatePassed(currentItem) && -currentItem.quality ||
+                          currentItem.sellIn < 6 && 3 ||
+                          currentItem.sellIn < 11 && 2 ||
+                          1
           break;
-        case ('Sulfuras, Hand of Ragnaros'):
+        case (SPECIAL_PRODUCTS.sulfuras):
           qualityUpdate = 0;
           sellInUpdate = 0;
           break;
