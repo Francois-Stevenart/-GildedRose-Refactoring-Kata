@@ -12,7 +12,7 @@ describe('Gilded Rose system for standard products', () => {
     gildedRose = new GildedRose([standardItem]);
   })
 
-  test('should lower the SellIn value by 1 each day', () => {
+  it('should lower the SellIn & Quality values by 1 each day', () => {
     gildedRose.updateQuality();
     const updatedStandardItem = gildedRose.items[0];
 
@@ -21,12 +21,40 @@ describe('Gilded Rose system for standard products', () => {
     expect(updatedStandardItem.quality).toBe(11);
   });
 
-  test('should lower the SellIn value linearly after multiple days', () => {
+  it('should lower the SellIn & Quality values linearly after multiple days', () => {
     range(4).forEach(day => gildedRose.updateQuality());
     const updatedStandardItem = gildedRose.items[0];
 
-    expect(updatedStandardItem.name).toBe('Sausages');
     expect(updatedStandardItem.sellIn).toBe(1);
     expect(updatedStandardItem.quality).toBe(8);
+  })
+
+  it('should lower the Quality value twice faster when SellIn value is negative', () => {
+    range(6).forEach(day => gildedRose.updateQuality());
+    let updatedStandardItem = gildedRose.items[0];
+
+    expect(updatedStandardItem.sellIn).toBe(-1);
+    expect(updatedStandardItem.quality).toBe(5);
+
+    gildedRose.updateQuality()
+    updatedStandardItem = gildedRose.items[0];
+    expect(updatedStandardItem.sellIn).toBe(-2);
+    expect(updatedStandardItem.quality).toBe(3);
+  })
+
+  it('should never lower the Quality value under 0, no matter how many days have passed after the SellIn day', () => {
+    range(10).forEach(day => gildedRose.updateQuality());
+    const updatedStandardItem = gildedRose.items[0];
+
+    expect(updatedStandardItem.sellIn).toBe(-5);
+    expect(updatedStandardItem.quality).toBe(0)
+  })
+
+  it('should not increase a Quality value above 50 for products whose quality increase with time', () => {
+    const productIncreasingInQuality = new Item('Aged Brie', 5, 10);
+    const gildedRose = new GildedRose([productIncreasingInQuality]);
+
+    range(45).forEach(day => gildedRose.updateQuality());
+    expect(gildedRose.items[0].quality).toBe(50)
   })
 });
