@@ -1,6 +1,8 @@
 # My TypeScript resolution of Gilded Rose Refactoring Kata
 
-My own take at the Gilded Rose Refactoring Kata in TypeScript (original Kata instructions below). Instead of a traditional switch statement, I went towards a config-based approach, where the updating behaviour of each product is declared upfront in a config object and depends on the specified sell-in day ranges. This little abstraction allows adding new products more easily without needing to touch the core logic of the code itself, and makes the whole system behaviour more explicit. In an improved version, we could handle more gracefully the cases where there are errors in this config object (e.g. sell-in day ranges that overlap each other).
+My take at the Gilded Rose Refactoring Kata in TypeScript.
+
+Instead of a traditional switch statement, I went towards a config-based approach, where the updating behaviour of each product is declared upfront in a config object and depends on the specified sell-in day ranges. This little abstraction allows adding new products more easily without needing to touch the core logic of the code itself, and makes the whole system behaviour more explicit. In an improved version, we could handle more gracefully the cases where there are errors in this config object (e.g. sell-in day ranges that overlap each other).
 
 The standard and non-standard products behaviours are all covered in a Jest test suite.
 
@@ -12,9 +14,9 @@ npm install
 npm run test
 ```
 
----
 
-# Original description
+
+# Original description (as from [emilybache](https://github.com/emilybache/GildedRose-Refactoring-Kata))
 
 This Kata was originally created by Terry Hughes (http://twitter.com/TerryHughes). It is already on GitHub [here](https://github.com/NotMyself/GildedRose). See also [Bobby Johnson's description of the kata](https://iamnotmyself.com/refactor-this-the-gilded-rose-kata/).
 
@@ -35,19 +37,6 @@ You could write some unit tests yourself, using the requirements to identify sui
 Alternatively, use the "Text-Based" tests provided in this repository. (Read more about that in the next section)
 
 Whichever testing approach you choose, the idea of the exercise is to do some deliberate practice, and improve your skills at designing test cases and refactoring. The idea is not to re-write the code from scratch, but rather to practice designing tests, taking small steps, running the tests often, and incrementally improving the design.
-
-### Gilded Rose Requirements in other languages
-
-- [English](GildedRoseRequirements.txt)
-- [Español](GildedRoseRequirements_es.md)
-- [Français](GildedRoseRequirements_fr.md)
-- [日本語](GildedRoseRequirements_jp.md)
-- [Português](GildedRoseRequirements_pt-BR.md)
-- [Русский](GildedRoseRequirements_ru.txt)
-- [ไทย](GildedRoseRequirements_th.md)
-- [中文](GildedRoseRequirements_zh.txt)
-- [한국어](GildedRoseRequirements_kr.md)
-- [German](GildedRoseRequirements_de.md)
 
 ## Text-Based Approval Testing
 
