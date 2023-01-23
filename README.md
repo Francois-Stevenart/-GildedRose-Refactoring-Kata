@@ -1,4 +1,20 @@
-# Gilded Rose Refactoring Kata
+# My TypeScript resolution of Gilded Rose Refactoring Kata
+
+My own take at the Gilded Rose Refactoring Kata in TypeScript (original Kata instructions below). Instead of a traditional switch statement, I went towards a config-based approach, where the updating behaviour of each product is declared upfront in a config object and depends on the specified sell-in day ranges. This little abstraction allows adding new products more easily without needing to touch the core logic of the code itself, and makes the whole system behaviour more explicit. In an improved version, we could handle more gracefully the cases where there are errors in this config object (e.g. sell-in day ranges that overlap each other).
+
+The standard and non-standard products behaviours are all covered in a Jest test suite.
+
+## Setup and testing
+Clone the repo, and then:
+```
+cd .\TypeScript\
+npm install
+npm run test
+```
+
+---
+
+# Original description
 
 This Kata was originally created by Terry Hughes (http://twitter.com/TerryHughes). It is already on GitHub [here](https://github.com/NotMyself/GildedRose). See also [Bobby Johnson's description of the kata](https://iamnotmyself.com/refactor-this-the-gilded-rose-kata/).
 
@@ -18,9 +34,9 @@ You could write some unit tests yourself, using the requirements to identify sui
 
 Alternatively, use the "Text-Based" tests provided in this repository. (Read more about that in the next section)
 
-Whichever testing approach you choose, the idea of the exercise is to do some deliberate practice, and improve your skills at designing test cases and refactoring. The idea is not to re-write the code from scratch, but rather to practice designing tests, taking small steps, running the tests often, and incrementally improving the design. 
+Whichever testing approach you choose, the idea of the exercise is to do some deliberate practice, and improve your skills at designing test cases and refactoring. The idea is not to re-write the code from scratch, but rather to practice designing tests, taking small steps, running the tests often, and incrementally improving the design.
 
-### Gilded Rose Requirements in other languages 
+### Gilded Rose Requirements in other languages
 
 - [English](GildedRoseRequirements.txt)
 - [Español](GildedRoseRequirements_es.md)
@@ -39,7 +55,7 @@ Most language versions of this code have a [TextTest](https://texttest.org) fixt
 
 ## Translating this code
 
-More translations are most welcome! I'm very open for pull requests that translate the starting position into additional languages. 
+More translations are most welcome! I'm very open for pull requests that translate the starting position into additional languages.
 
 Please note a translation should ideally include:
 
@@ -47,7 +63,7 @@ Please note a translation should ideally include:
 - one failing unit test complaining that "fixme" != "foo"
 - a TextTest fixture, ie a command-line program that runs update_quality on the sample data for the number of days specified.
 
-Please don't write too much code in the starting position or add too many unit tests. The idea with the one failing unit test is to tempt people to work out how to fix it, discover it wasn't that hard, and now they understand what this test is doing they realize they can improve it.  
+Please don't write too much code in the starting position or add too many unit tests. The idea with the one failing unit test is to tempt people to work out how to fix it, discover it wasn't that hard, and now they understand what this test is doing they realize they can improve it.
 
 If your programming language doesn't have an easy way to add a command-line interface, then the TextTest fixture is probably not necessary.
 
