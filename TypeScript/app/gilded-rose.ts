@@ -40,7 +40,7 @@ const CONFIG: GildedRoseConfig = {
       { minSellInDay: -Infinity, maxSellInDay: 0, qualityIncrement: -4 }
     ],
   }
-}
+};
 
 export class Item {
   name: string;
@@ -82,8 +82,8 @@ export class GildedRose {
     const productConfig = this.config.products[item.name] || this.config.products['default'];
 
     const productConfigInCurrentSellInRange = productConfig.find(config => {
-      return item.sellIn > config.minSellInDay && item.sellIn <= config.maxSellInDay
-    })
+      return item.sellIn > config.minSellInDay && item.sellIn <= config.maxSellInDay;
+    });
 
     return productConfigInCurrentSellInRange;
   }
@@ -91,11 +91,11 @@ export class GildedRose {
   private setItemQuality(item: Item, increment = -1) {
     if (!increment) return;
 
-    const updatedQuality = item.quality + increment
+    const updatedQuality = item.quality + increment;
 
     item.quality = updatedQuality >= this.minQuality
       ? Math.min(updatedQuality, this.maxQuality)
-      : Math.max(updatedQuality, this.minQuality)
+      : Math.max(updatedQuality, this.minQuality);
   }
 
   private setItemSellIn(item: Item, increment = -1) {
