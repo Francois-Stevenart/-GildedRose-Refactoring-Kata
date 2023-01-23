@@ -1,15 +1,27 @@
-interface Config {
-  minQuality: number,
-  maxQuality: number,
+interface ProductConfig {
+  minSellInDay: number;
+  maxSellInDay: number;
+  qualityIncrement: number;
+  sellInIncrement?: number;
+}
+
+interface GildedRoseConfig {
+  minQuality: number;
+  maxQuality: number;
   products: {
-    [productName: string]: { minSellInDay: number, maxSellInDay: number, qualityIncrement: number, sellInIncrement?: number }[]
+    default: ProductConfig[];
+    [productName: string]: ProductConfig[];
   }
 }
 
-const CONFIG: Config = {
+const CONFIG: GildedRoseConfig = {
   minQuality: 0,
   maxQuality: 50,
   products: {
+    default: [
+      { minSellInDay: 0, maxSellInDay: Infinity, qualityIncrement: -1 },
+      { minSellInDay: -Infinity, maxSellInDay: 0, qualityIncrement: -2 }
+    ],
     'Aged Brie': [
       { minSellInDay: 0, maxSellInDay: Infinity, qualityIncrement: 1 },
       { minSellInDay: -Infinity, maxSellInDay: 0, qualityIncrement: 2 }
@@ -27,10 +39,6 @@ const CONFIG: Config = {
       { minSellInDay: 0, maxSellInDay: Infinity, qualityIncrement: -2 },
       { minSellInDay: -Infinity, maxSellInDay: 0, qualityIncrement: -4 }
     ],
-    default: [
-      { minSellInDay: 0, maxSellInDay: Infinity, qualityIncrement: -1 },
-      { minSellInDay: -Infinity, maxSellInDay: 0, qualityIncrement: -2 }
-    ]
   }
 }
 
@@ -47,47 +55,50 @@ export class Item {
 }
 
 export class GildedRose {
-  items: Array<Item>;
-  config: Config;
+  items: Item[];
+  config: GildedRoseConfig;
   maxQuality: number;
   minQuality: number;
 
-  constructor(items = [] as Array<Item>) {
+  constructor(items = [] as Item[]) {
     this.items = items;
     this.config = CONFIG;
     this.maxQuality = this.config.maxQuality;
     this.minQuality = this.config.minQuality;
   }
 
-  private findRelevantProductConfig(item: Item) {
-    return (this.config.products[item.name] || this.config.products['default']).find(config => {
-      return item.sellIn > config.minSellInDay && item.sellIn <= config.maxSellInDay
-    })
+  updateQuality() {
+    for (const item of this.items) {
+      const productConfig = this.findProductConfig(item);
+
+      this.setItemQuality(item, productConfig?.['qualityIncrement']);
+      this.setItemSellIn(item, productConfig?.['sellInIncrement']);
+    }
+
+    return this.items;
   }
 
-  private setItemQuality(item: Item, amount = -1) {
-    if (!amount) return;
+  private findProductConfig(item: Item) {
+    const productConfig = this.config.products[item.name] || this.config.products['default'];
 
-    const updatedQuality = item.quality + amount
+    const productConfigInCurrentSellInRange = productConfig.find(config => {
+      return item.sellIn > config.minSellInDay && item.sellIn <= config.maxSellInDay
+    })
+
+    return productConfigInCurrentSellInRange;
+  }
+
+  private setItemQuality(item: Item, increment = -1) {
+    if (!increment) return;
+
+    const updatedQuality = item.quality + increment
 
     item.quality = updatedQuality >= this.minQuality
       ? Math.min(updatedQuality, this.maxQuality)
       : Math.max(updatedQuality, this.minQuality)
   }
 
-  private setItemSellIn(item: Item, amount = -1) {
-    item.sellIn = item.sellIn + amount;
-  }
-
-  updateQuality() {
-    for (let i = 0; i < this.items.length; i++) {
-      const currentItem = this.items[i];
-      const relevantProductConfig = this.findRelevantProductConfig(currentItem);
-
-      this.setItemQuality(currentItem, relevantProductConfig?.['qualityIncrement']);
-      this.setItemSellIn(currentItem, relevantProductConfig?.['sellInIncrement']);
-    }
-
-    return this.items;
+  private setItemSellIn(item: Item, increment = -1) {
+    item.sellIn = item.sellIn + increment;
   }
 }
